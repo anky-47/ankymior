@@ -1591,56 +1591,71 @@ class Document {
   }
 
   buildProxyGroup() {
-    let proxyGroupElement = "";
-    proxyGroupElement += `<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">`;
-    for (let i = 0; i < this.proxies.length; i++) {
-      const proxyData = this.proxies[i];
+  let proxyGroupElement = "";
+  proxyGroupElement += `<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4 animate-fadeIn">`;
 
-      // Assign proxies
-      proxyGroupElement += `<div class="lozad scale-95 mb-2 bg-white dark:bg-neutral-800 transition-transform duration-200 rounded-lg p-4 w-60 border-2 border-neutral-800">`;
-      proxyGroupElement += `  <div id="countryFlag" class="absolute -translate-y-9 -translate-x-2 border-2 border-neutral-800 rounded-full overflow-hidden"><img width="32" src="https://hatscripts.github.io/circle-flags/flags/${proxyData.country.toLowerCase()}.svg" /></div>`;
-      proxyGroupElement += `  <div>`;
-      proxyGroupElement += `    <div id="ping-${i}" class="animate-pulse text-xs font-semibold dark:text-white">Idle ${proxyData.proxyIP}:${proxyData.proxyPort}</div>`;
-      proxyGroupElement += `  </div>`;
-      proxyGroupElement += `  <div class="rounded py-1 px-2 bg-amber-400 dark:bg-neutral-800 dark:border-2 dark:border-amber-400">`;
-      proxyGroupElement += `    <h5 class="font-bold text-md text-neutral-900 dark:text-white mb-1 overflow-x-scroll scrollbar-hide text-nowrap">${proxyData.org}</h5>`;
-      proxyGroupElement += `    <div class="text-neutral-900 dark:text-white text-sm">`;
-      proxyGroupElement += `      <p>IP: ${proxyData.proxyIP}</p>`;
-      proxyGroupElement += `      <p>Port: ${proxyData.proxyPort}</p>`;
-      proxyGroupElement += `      <div id="container-region-check-${i}">`;
-      proxyGroupElement += `        <input id="config-sample-${i}" class="hidden" type="text" value="${proxyData.list[0]}">`;
-      proxyGroupElement += `      </div>`;
-      proxyGroupElement += `    </div>`;
-      proxyGroupElement += `  </div>`;
-      proxyGroupElement += `  <div class="flex flex-col gap-2 mt-3 text-sm">`;
-      for (let x = 0; x < proxyData.list.length; x++) {
-        const indexName = [
-          `${reverse("NAJORT")} TLS`,
-          `${reverse("SSELV")} TLS`,
-          `${reverse("SS")} TLS`,
-          `${reverse("NAJORT")} NTLS`,
-          `${reverse("SSELV")} NTLS`,
-          `${reverse("SS")} NTLS`,
-        ];
-        const proxy = proxyData.list[x];
+  const providerIcons = {
+    "cloudflare": "https://cdn.jsdelivr.net/gh/akameco/provider-icons/icons/cloudflare.svg",
+    "m247": "https://cdn.jsdelivr.net/gh/akameco/provider-icons/icons/m247.svg",
+    "oracle": "https://cdn.jsdelivr.net/gh/akameco/provider-icons/icons/oracle.svg",
+    "google": "https://cdn.jsdelivr.net/gh/akameco/provider-icons/icons/google.svg",
+    "amazon": "https://cdn.jsdelivr.net/gh/akameco/provider-icons/icons/aws.svg",
+    "digitalocean": "https://cdn.jsdelivr.net/gh/akameco/provider-icons/icons/digitalocean.svg",
+    "vultr": "https://cdn.jsdelivr.net/gh/akameco/provider-icons/icons/vultr.svg",
+    "netflix": "https://cdn.jsdelivr.net/gh/akameco/provider-icons/icons/netflix.svg"
+  };
 
-        if (x % 2 == 0) {
-          proxyGroupElement += `<div class="flex gap-2 justify-around w-full">`;
-        }
+  for (let i = 0; i < this.proxies.length; i++) {
+    const proxyData = this.proxies[i];
 
-        proxyGroupElement += `<button class="bg-blue-500 dark:bg-neutral-800 dark:border-2 dark:border-blue-500 rounded p-1 w-full text-white" onclick="copyToClipboard('${proxy}')">${indexName[x]}</button>`;
+    const lowerOrg = proxyData.org.toLowerCase();
+    const iconSrc = Object.keys(providerIcons).find(key => lowerOrg.includes(key)) ? providerIcons[Object.keys(providerIcons).find(key => lowerOrg.includes(key))] : "https://cdn-icons-png.flaticon.com/512/727/727606.png";
 
-        if (x % 2 == 1) {
-          proxyGroupElement += `</div>`;
-        }
-      }
-      proxyGroupElement += `  </div>`;
-      proxyGroupElement += `</div>`;
+    proxyGroupElement += `
+      <div class="lozad opacity-0 animate-cardFade transition-opacity duration-700 bg-gradient-to-br from-neutral-800 to-gray-900 rounded-2xl shadow-xl text-white p-5 border border-blue-500 relative hover:scale-105 transform transition-transform">
+        <div class="absolute -top-5 -left-5 rounded-full overflow-hidden border-2 border-white shadow">
+          <img width="36" src="https://hatscripts.github.io/circle-flags/flags/${proxyData.country.toLowerCase()}.svg" />
+        </div>
+        <div class="flex items-center gap-2 mb-3">
+          <img src="${iconSrc}" alt="${proxyData.org}" class="w-5 h-5">
+          <h3 class="text-sm font-bold truncate">${proxyData.org}</h3>
+        </div>
+        <p id="ping-${i}" class="text-xs text-green-400 animate-pulse mb-1">Idle ${proxyData.proxyIP}:${proxyData.proxyPort}</p>
+        <p class="text-sm">IP: <span class="text-blue-300">${proxyData.proxyIP}</span></p>
+        <p class="text-sm">Port: <span class="text-blue-300">${proxyData.proxyPort}</span></p>
+        <input id="config-sample-${i}" class="hidden" type="text" value="${proxyData.list[0]}">
+        <div id="container-region-check-${i}" class="text-sm mt-1"></div>
+        <div class="grid grid-cols-2 gap-2 mt-4">
+    `;
+
+    const indexName = [
+      `${reverse("NAJORT")} TLS`,
+      `${reverse("SSELV")} TLS`,
+      `${reverse("SS")} TLS`,
+      `${reverse("NAJORT")} NTLS`,
+      `${reverse("SSELV")} NTLS`,
+      `${reverse("SS")} NTLS`,
+    ];
+
+    for (let x = 0; x < proxyData.list.length; x++) {
+      const proxy = proxyData.list[x];
+      proxyGroupElement += `
+        <button class="bg-gradient-to-r from-blue-600 to-indigo-700 hover:brightness-110 transition text-xs font-medium rounded-xl py-1 px-2 text-white shadow" onclick="copyToClipboard('${proxy}')">
+          ${indexName[x]}
+        </button>
+      `;
     }
-    proxyGroupElement += `</div>`;
 
-    this.html = this.html.replaceAll("PLACEHOLDER_PROXY_GROUP", `${proxyGroupElement}`);
+    proxyGroupElement += `
+        </div>
+      </div>
+    `;
   }
+
+  proxyGroupElement += `</div>`;
+  this.html = this.html.replaceAll("PLACEHOLDER_PROXY_GROUP", `${proxyGroupElement}`);
+}
+
 
   buildCountryFlag() {
     const proxyBankUrl = this.url.searchParams.get("proxy-list");

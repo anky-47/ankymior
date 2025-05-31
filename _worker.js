@@ -4,7 +4,7 @@ import { connect } from "cloudflare:sockets";
 
 // Variables
 const rootDomain = "ankymior.workers.dev; // Ganti dengan domain utama kalian
-const serviceName = "vpn"; // Ganti dengan nama workers kalian
+const serviceName = "ankymior"; // Ganti dengan nama workers kalian
 const apiKey = "c173cef56ccf7d0f9d8902979f1466df4b138"; // Ganti dengan Global API key kalian (https://dash.cloudflare.com/profile/api-tokens)
 const apiEmail = "ankymior@gmail.com"; // Ganti dengan email yang kalian gunakan
 const accountID = "856594a3732d6b1e5112121c7cc51718"; // Ganti dengan Account ID kalian (https://dash.cloudflare.com -> Klik domain yang kalian gunakan)
